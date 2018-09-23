@@ -1,0 +1,12 @@
+version: '2.1'
+
+services:
+  ethToElk:
+    image: mcpayment/ubuntu1404-java8:latest
+    restart: always
+    ports:
+      - 9101:9101
+    volumes:
+       - /Ext_hdd_1T/project/eth_to_elk:/Ext_hdd_1T/project/eth_to_elk
+       - /Ext_hdd_1T/project_log/eth_to_elk:/var/log
+    command: bash -c "java -jar /Ext_hdd_1T/project/eth_to_elk/transport-0.0.1-SNAPSHOT.jar"

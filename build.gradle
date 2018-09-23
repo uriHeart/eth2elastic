@@ -30,6 +30,7 @@ dependencies {
     compile('org.elasticsearch:elasticsearch:6.4.0')
     compile('org.elasticsearch.client:transport:6.4.0')
     compile('org.elasticsearch.plugin:transport-netty4-client:6.4.0')
+    compile('com.google.code.gson:gson')
     compileOnly('org.projectlombok:lombok')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
