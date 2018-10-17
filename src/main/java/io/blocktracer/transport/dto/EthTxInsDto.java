@@ -27,7 +27,10 @@ public class EthTxInsDto {
     String sha3Uncles;
     String size;
     String stateRoot;
-    LocalDateTime timestamp;
+    LocalDateTime timestampUTC;
+    LocalDateTime timestampSeoul;
+    String txDateUTC;
+    String txDateSeoul;
     String totalDifficulty;
     String transactionsRoot;
     String blockNumber;
@@ -48,4 +51,6 @@ public class EthTxInsDto {
     String transactionIndex;
     String v;
     String value;
+    Float floatValue;
+
 }

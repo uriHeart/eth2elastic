@@ -58,4 +58,13 @@ public interface ElasticSearchService {
      */
     String addEthTxBulk(List<EthTxInsDto> insDtoList) throws IOException;
 
+
+    /**
+     * 엘라스틱 서치 Tx처리 성공한 블럭 인서트(블록단위 입력)
+     * @param blockNumberList
+     * @return
+     * @throws IOException
+     */
+    String addEthBlockNumberBulk(List<String> blockNumberList) throws IOException;
+
 }

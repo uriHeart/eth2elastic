@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +50,8 @@ public class ParityRpcServiceImpl implements ParityRpcService {
     @Value("${block.tracer.parity.rpc.divide.value}")
     private String divideBase;
 
+    @Value("${elk.transaction.insert.size}")
+    private Integer bulkSize;
 
     @Override
     public <T> T callParityRpc(RpcReqDto params, Class<T> classOfT) throws IOException {
@@ -129,10 +132,20 @@ public class ParityRpcServiceImpl implements ParityRpcService {
             insDto.setReceiptsRoot(blockData.getReceiptsRoot());
             insDto.setSha3Uncles(blockData.getSha3Uncles());
             insDto.setSize(EthNumberUtil.hexToNumber(blockData.getSize()));
-            insDto.setTimestamp(EthDateUtil.hexToDate(blockData.getTimestamp(),"UTC"));
+            HashMap<String,Object> txDateUTC =  EthDateUtil.hexToDateAll(blockData.getTimestamp(),"UTC");
+            HashMap<String,Object> txDateSeoul =  EthDateUtil.hexToDateAll(blockData.getTimestamp(),"Asia/Seoul");
+
+            insDto.setTimestampUTC((LocalDateTime) txDateUTC.get("date"));
+            insDto.setTimestampSeoul((LocalDateTime) txDateSeoul.get("date"));
+
+            insDto.setTxDateUTC((String) txDateUTC.get("string"));
+            insDto.setTxDateSeoul((String) txDateSeoul.get("string"));
+
             insDto.setTotalDifficulty(EthNumberUtil.hexToNumber(blockData.getTotalDifficulty()));
             insDto.setTransactionsRoot(blockData.getTransactionsRoot());
 
+
+            //TO_DO 날짜 스트링 및 롱생성
 
             //Tx Data Mapping
             insDto.setChainId(tx.getChainId());
@@ -152,8 +165,8 @@ public class ParityRpcServiceImpl implements ParityRpcService {
             insDto.setTo(tx.getTo());
             insDto.setTransactionIndex(EthNumberUtil.hexToNumber(tx.getTransactionIndex()));
             insDto.setV(tx.getV());
-            insDto.setValue(EthNumberUtil.hexToRealNumber(tx.getValue()));
-
+            insDto.setValue(EthNumberUtil.hexToStringNumber(tx.getValue()));
+            insDto.setFloatValue(EthNumberUtil.hexToFlotNumber(tx.getValue()));
             insDtoList.add(insDto);
         });
 
@@ -222,7 +235,7 @@ public class ParityRpcServiceImpl implements ParityRpcService {
             return "pass";
         }
 
-        String result = this.makeElkData(procBlockNumber,"Min",50);
+        String result = this.makeElkData(procBlockNumber,"Min",bulkSize);
 
 
         return result;
@@ -280,19 +293,15 @@ public class ParityRpcServiceImpl implements ParityRpcService {
                 log.error(elem[i].toString());
 
             //blockNumber 저장
-            for(String data : procBlockList){
-                this.addProcessedBlockNumber("error/block",data);
-            }
+            elkService.addEthBlockNumberBulk(procBlockList);
 
             return "false";
         }
 
         //blockNumber 저장
-        for(String data : procBlockList){
-            this.addProcessedBlockNumber("check/block",String.valueOf(data));
-        }
+        String result = elkService.addEthBlockNumberBulk(procBlockList);
 
-        return "success";
+        return result;
     }
 
     @Override
@@ -302,8 +311,8 @@ public class ParityRpcServiceImpl implements ParityRpcService {
         blockNumberInsDto.setInsert(true);
 
         blockNumberInsDto.setBlockNumber(Integer.parseInt(blockNumber));
-        elkService.elasticHttpPost(blockSaveUri, blockNumberInsDto);
+        String result = elkService.elasticHttpPost(blockSaveUri, blockNumberInsDto);
 
-        return "success";
+        return result;
     }
 }

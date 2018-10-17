@@ -12,12 +12,26 @@ public class EthNumberUtil {
        return new BigInteger(hexDecimal.substring(2),16).toString();
     }
 
-    public static String hexToRealNumber(@NotNull String hexDecimal){
+    public static BigDecimal hexToRealNumber(@NotNull String hexDecimal){
 
-       BigInteger hexValue =  new BigInteger( hexDecimal.substring(2),16 );
-       BigDecimal value = new BigDecimal( hexValue,hexValue.compareTo(BigInteger.ZERO)==0 ? 0 : 18);
+        BigInteger hexValue =  new BigInteger( hexDecimal.substring(2),16 );
+        BigDecimal value = new BigDecimal( hexValue,hexValue.compareTo(BigInteger.ZERO)==0 ? 0 : 18);
+        return value;
+    }
 
-       return value.toString();
+    public static Float hexToFlotNumber(@NotNull String hexDecimal){
+
+        BigInteger hexValue =  new BigInteger( hexDecimal.substring(2),16 );
+        BigDecimal value = new BigDecimal( hexValue,hexValue.compareTo(BigInteger.ZERO)==0 ? 0 : 18);
+        return value.floatValue();
+    }
+
+    public static String hexToStringNumber(@NotNull String hexDecimal){
+
+        BigInteger hexValue =  new BigInteger( hexDecimal.substring(2),16 );
+        BigDecimal value = new BigDecimal( hexValue,hexValue.compareTo(BigInteger.ZERO)==0 ? 0 : 18);
+
+        return String.valueOf(value.floatValue());
     }
 
     public static String hexToGasPrice(@NotNull String hexDecimal){

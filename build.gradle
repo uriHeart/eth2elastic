@@ -23,6 +23,10 @@ repositories {
     mavenCentral()
 }
 
+jar {
+    exclude('application.properties')
+}
+
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')

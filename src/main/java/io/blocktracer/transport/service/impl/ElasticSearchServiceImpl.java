@@ -1,7 +1,9 @@
 package io.blocktracer.transport.service.impl;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import io.blocktracer.transport.dto.EthBlockNumberInsDto;
 import io.blocktracer.transport.dto.EthTxInsDto;
 import io.blocktracer.transport.service.ElasticSearchService;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +39,8 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
     @Value("${block.tracer.elk.port}")
     private String elkPort;
 
-    private static Gson gson = new Gson();
-
+    @Value("${elk.cluster.name}")
+    private String clusterName;
 
     @Override
     public <T> T elasticHttpGet(String uri, Class<T> t) throws IOException {
@@ -145,7 +147,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
     public String addEthTxBulk(List<EthTxInsDto> insDtoList) throws IOException {
 
         Settings settings = Settings.builder()
-                .put("cluster.name", "itf_ethereum").build();
+                .put("cluster.name",clusterName).build();
 
         TransportClient client = new PreBuiltTransportClient(settings)
                 .addTransportAddress(new TransportAddress(InetAddress.getByName(elkHost), 9300));
@@ -153,6 +155,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
         BulkRequestBuilder builder = client.prepareBulk();
 
         log.warn("eth to elk convert start!!");
+        Gson gson = new Gson();
         for(EthTxInsDto insDto : insDtoList){
             builder.add(client.prepareIndex("eth","transaction",insDto.getHash())
                     .setSource(gson.toJson(insDto),XContentType.JSON)
@@ -162,8 +165,45 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
 
         log.warn("elk add start!!");
         BulkResponse response = builder.get();
+        if(response.hasFailures()){
+            log.error(response.buildFailureMessage());
+        }
         log.warn("elk add end!!");
+        String result =  response.status().toString();
+        client.close();
 
-        return response.status().toString();
+        return result;
+    }
+
+    @Override
+    public String addEthBlockNumberBulk(List<String> blockNumberList) throws IOException {
+        Settings settings = Settings.builder()
+                .put("cluster.name",clusterName).build();
+
+        TransportClient client = new PreBuiltTransportClient(settings)
+                .addTransportAddress(new TransportAddress(InetAddress.getByName(elkHost), 9300));
+
+        BulkRequestBuilder builder = client.prepareBulk();
+
+        Gson gson = new Gson();
+        for(String blockNumber : blockNumberList){
+
+            EthBlockNumberInsDto blockNumberInsDto = new EthBlockNumberInsDto();
+            blockNumberInsDto.setInsert(true);
+            blockNumberInsDto.setBlockNumber(Integer.parseInt(blockNumber));
+
+            builder.add(client.prepareIndex("check","block",blockNumber)
+                    .setSource(gson.toJson(blockNumberInsDto),XContentType.JSON)
+            );
+        }
+        BulkResponse response = builder.get();
+        if(response.hasFailures()){
+            log.error(response.buildFailureMessage());
+        }
+
+        String result =  response.status().toString();
+        client.close();
+
+        return result;
     }
 }
