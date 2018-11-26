@@ -38,7 +38,6 @@ public class EthNumberUtil {
 
         BigInteger hexValue =  new BigInteger( hexDecimal.substring(2),16 );
         String value = new BigDecimal( hexValue,hexValue.compareTo(BigInteger.ZERO)==0 ? 0 : 18).toPlainString();
-
         int endIndex=0;
 
         for(int i=1; i < value.length(); i++){

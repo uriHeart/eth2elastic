@@ -4,9 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,13 +24,14 @@ public class EthTxInsDto {
     String sha3Uncles;
     String size;
     String stateRoot;
-    LocalDateTime timestampUTC;
-    LocalDateTime timestampSeoul;
+    String timestampUTC;
+    Long   timeLong;
+    String timestampSeoul;
     String txDateUTC;
     String txDateSeoul;
     String totalDifficulty;
     String transactionsRoot;
-    String blockNumber;
+    Long blockNumber;
     String chainId;
     String condition;
     String creates;

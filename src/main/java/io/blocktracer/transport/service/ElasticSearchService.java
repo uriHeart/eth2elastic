@@ -65,6 +65,6 @@ public interface ElasticSearchService {
      * @return
      * @throws IOException
      */
-    String addEthBlockNumberBulk(List<String> blockNumberList) throws IOException;
+    String addEthBlockNumberBulk(List<String> blockNumberList,String indexName) throws IOException;
 
 }

@@ -27,7 +27,6 @@ jar {
     exclude('application.properties')
 }
 
-
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-actuator')
@@ -37,4 +36,6 @@ dependencies {
     compile('com.google.code.gson:gson')
     compileOnly('org.projectlombok:lombok')
     testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile group: 'org.springframework.data', name: 'spring-data-elasticsearch', version: '1.0.0.RELEASE'
+
 }

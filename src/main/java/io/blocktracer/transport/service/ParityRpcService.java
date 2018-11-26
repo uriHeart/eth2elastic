@@ -52,6 +52,14 @@ public interface ParityRpcService {
 
 
     /**
+     * 과거의 이더리움 노드의 데이터를 엘라스틱 서치에 생성한다.
+     * @return
+     */
+    String makeMaxEthTxDataToElk() throws IOException;
+
+
+
+    /**
      * elk 에 트랜잭션 데이터를 생성한다.
      * @param blockNumber
      * @param min_max

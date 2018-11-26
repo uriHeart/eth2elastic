@@ -176,7 +176,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
     }
 
     @Override
-    public String addEthBlockNumberBulk(List<String> blockNumberList) throws IOException {
+    public String addEthBlockNumberBulk(List<String> blockNumberList,String indexName) throws IOException {
         Settings settings = Settings.builder()
                 .put("cluster.name",clusterName).build();
 
@@ -192,7 +192,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService {
             blockNumberInsDto.setInsert(true);
             blockNumberInsDto.setBlockNumber(Integer.parseInt(blockNumber));
 
-            builder.add(client.prepareIndex("check","block",blockNumber)
+            builder.add(client.prepareIndex(indexName,"block",blockNumber)
                     .setSource(gson.toJson(blockNumberInsDto),XContentType.JSON)
             );
         }
