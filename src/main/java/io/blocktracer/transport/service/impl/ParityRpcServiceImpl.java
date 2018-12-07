@@ -13,7 +13,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -22,10 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -180,7 +176,7 @@ public class ParityRpcServiceImpl implements ParityRpcService {
         return insDtoList;
     }
 
-    //@Scheduled(cron ="0/1 * * * * ?")
+    @Scheduled(cron ="0/1 * * * * ?")
     @Override
     public String makeEthTxDataToElk() throws IOException {
 
