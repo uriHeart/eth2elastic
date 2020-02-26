@@ -30,8 +30,16 @@ public class EthNumberUtil {
 
         BigInteger hexValue =  new BigInteger( hexDecimal.substring(2),16 );
         BigDecimal value = new BigDecimal( hexValue,hexValue.compareTo(BigInteger.ZERO)==0 ? 0 : 18);
+        String val = value.toPlainString();
+        int endIndex=1;
 
-        return String.valueOf(value.floatValue());
+        for(int i=val.length(); i > 1; i--){
+            if(!val.substring(i-1,i).equals("0")){
+                endIndex=i;
+                break;
+            }
+        }
+        return val.substring(0,endIndex);
     }
 
     public static String hexToGasPrice(@NotNull String hexDecimal){

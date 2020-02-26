@@ -38,21 +38,21 @@ public interface ParityRpcService {
     List<EthTxInsDto> getEthBlockDataByNumber(String hexBlockNumber) throws IOException;
 
     /**
-     * 주기적으로 이더리움 노드의 데이터를 엘라스틱 서치에 생성한다.
+     * 매1초 이더리움 노드를 검색하여 신규생성된 데이터를 엘라스틱 서치에 생성한다.
      * @return
      */
     String makeEthTxDataToElk() throws IOException;
 
 
     /**
-     * 과거의 이더리움 노드의 데이터를 엘라스틱 서치에 생성한다.
+     * 과거의 이더리움 노드의 데이터를 엘라스틱 서치에 생성한다.(초기이관용)
      * @return
      */
     String makeBeforeEthTxDataToElk() throws IOException;
 
 
     /**
-     * 과거의 이더리움 노드의 데이터를 엘라스틱 서치에 생성한다.
+     * 노드데이터 이관시점 이후 데이터를 엘라스틱 서치에 생성한다.(초기이관용)
      * @return
      */
     String makeMaxEthTxDataToElk() throws IOException;

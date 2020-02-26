@@ -13,6 +13,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.apache.tomcat.jni.OS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -176,6 +177,7 @@ public class ParityRpcServiceImpl implements ParityRpcService {
         return insDtoList;
     }
 
+    //운영시 해제
     @Scheduled(cron ="0/1 * * * * ?")
     @Override
     public String makeEthTxDataToElk() throws IOException {
@@ -242,8 +244,8 @@ public class ParityRpcServiceImpl implements ParityRpcService {
     }
 
 
-
-    @Scheduled(cron ="0/10 * * * * ?")
+    //max블록 bulk 생성
+    //@Scheduled(cron ="0/10 * * * * ?")
     @Override
     public String makeMaxEthTxDataToElk() throws IOException {
 
@@ -335,6 +337,7 @@ public class ParityRpcServiceImpl implements ParityRpcService {
         String blockSaveUri = elkService.makeElasticUri(target, blockNumber);
         EthBlockNumberInsDto blockNumberInsDto = new EthBlockNumberInsDto();
         blockNumberInsDto.setInsert(true);
+
 
         blockNumberInsDto.setBlockNumber(Integer.parseInt(blockNumber));
         String result = elkService.elasticHttpPost(blockSaveUri, blockNumberInsDto);

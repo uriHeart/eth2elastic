@@ -1,3 +1,5 @@
+import io.blocktracer.transport.util.EthNumberUtil;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
@@ -17,9 +19,24 @@ public class DateTest {
         LocalDateTime time = zdt.toLocalDateTime();
 
 
-        BigInteger hexValue =  new BigInteger( "0xf3238b2cd0d8000".substring(2),16 );
+        BigInteger hexValue =  new BigInteger( "0x0".substring(2),16 );
         BigDecimal value = new BigDecimal( hexValue,hexValue.compareTo(BigInteger.ZERO)==0 ? 0 : 18);
-        value.toPlainString();
+        String val = value.toPlainString();
+
+        int endIndex=0;
+
+        for(int i=val.length(); i >= 1; i--){
+            System.out.println(val.substring(i-1,i));
+             if(!val.substring(i-1,i).equals("0")){
+                 endIndex=i;
+                break;
+            }
+        }
+
+
+        System.out.println( val.substring(0,endIndex));
+        String result = EthNumberUtil.hexToGasNumber("0x1b1ae47763b79c7000");
+        System.out.println( result);
 
     }
 }
